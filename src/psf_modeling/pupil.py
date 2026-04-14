@@ -109,6 +109,37 @@ def build_jwst_pupil(
     return add_jwst_spiders(pupil, width=spider_width, segment_radius=segment_radius)
 
 
+def add_hst_spiders(pupil: np.ndarray, width: int = 4) -> np.ndarray:
+    """Add a simplified HST 4-spike support pattern (orthogonal spiders)."""
+    new_pupil = np.array(pupil, dtype=float, copy=True)
+    ny, nx = new_pupil.shape
+    cy, cx = ny // 2, nx // 2
+    ii, jj = np.indices(new_pupil.shape)
+
+    spider_mask = (np.abs(ii - cy) <= width // 2) | (np.abs(jj - cx) <= width // 2)
+    new_pupil[spider_mask] = 0.0
+    return new_pupil
+
+
+def build_hst_pupil(
+    nx: int = 512,
+    outer_radius: float = 120.0,
+    obscuration_ratio: float = 0.33,
+    spider_width: int = 4,
+) -> np.ndarray:
+    """Build a simplified HST-like binary pupil (obscured circle + spiders)."""
+    if not (0.0 < obscuration_ratio < 1.0):
+        raise ValueError("obscuration_ratio must be between 0 and 1.")
+
+    coords = centered_coordinates(nx)
+    xx, yy = np.meshgrid(coords, coords)
+    rr = np.sqrt(xx**2 + yy**2)
+
+    obscuration_radius = outer_radius * obscuration_ratio
+    pupil = ((rr < outer_radius) & (rr > obscuration_radius)).astype(float)
+    return add_hst_spiders(pupil, width=spider_width)
+
+
 def pupil_circle(nx: int, radius: float) -> np.ndarray:
     """Binary circular pupil."""
     coords = centered_coordinates(nx)

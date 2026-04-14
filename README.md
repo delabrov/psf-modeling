@@ -1,6 +1,6 @@
 # psf-modeling
 
-`psf-modeling` est une simulation pédagogique de fonctions d’étalement du point (PSF) en optique de Fourier. Le projet se concentre sur une pupille JWST simplifiée et inclut aussi des géométries alternatives, comme des pupilles circulaires, hexagonales ou circulaires obscurées.
+`psf-modeling` est une simulation pédagogique de fonctions d’étalement du point (PSF) en optique de Fourier. Le projet se concentre sur des pupilles simplifiées de type JWST et HST, et inclut aussi des géométries alternatives, comme des pupilles circulaires, hexagonales ou circulaires obscurées.
 
 ## Objectif du projet
 
@@ -24,17 +24,38 @@ La figure `figures/other_pupil_psf.png` montre un exemple de pupille synthétiqu
 
 ![Synthetic pupil and PSF](figures/other_pupil_psf.png)
 
+La figure `figures/hst_pupil_psf.png` présente une pupille HST simplifiée, modélisée comme une ouverture circulaire avec obstruction centrale et spiders orthogonaux. La PSF associée retrouve une structure de diffraction typique d’un télescope à pupille circulaire obscurée avec aigrettes bien marquées.
+
+![HST pupil and PSF](figures/hst_pupil_psf.png)
+
+## Convolution d’un champ stellaire avec la PSF JWST
+
+Le projet inclut aussi une scène stellaire synthétique, puis sa convolution par la PSF JWST. La figure `figures/observed_field_initial_vs_jwst.png` affiche côte à côte le champ initial et le champ observé après convolution, tous deux en échelle logarithmique pour conserver à la fois le cœur des étoiles et les structures de faible intensité.
+
+![Initial field vs JWST-convolved field](figures/observed_field_initial_vs_jwst.png)
+
+La figure `figures/observed_field_jwst_only.png` montre l’image convoluée seule. On voit que la PSF redistribue le flux autour des sources ponctuelles et introduit la structure directionnelle liée à la géométrie de la pupille.
+
+![JWST convolved field](figures/observed_field_jwst_only.png)
+
+La figure `figures/observed_field_jwst_star_zoom.png` est un zoom unique centré sur l’étoile de coordonnées `(x=421, y=436)`. Ce zoom met en évidence les aigrettes de diffraction et permet une lecture locale plus claire de la réponse instrumentale.
+
+![JWST single-star zoom](figures/observed_field_jwst_star_zoom.png)
+
 ## Utilisation rapide
 
 ```bash
 python PSF_JWST.py --no-show
+python PSF_HST.py --no-show
 python view_PSF.py --no-show
 python others_PSF.py --no-show
+python scripts/generate_synthetic_scene.py --no-show --n-galaxies 0 --n-diffuse 0
+python scripts/apply_jwst_psf_to_scene.py --no-show
 ```
 
 ## Structure du dépôt
 
-Le script `PSF_JWST.py` génère une pupille JWST simplifiée, calcule la PSF et produit la figure principale. Le script `view_PSF.py` recharge une pupille sauvegardée et affiche la PSF correspondante, tandis que `others_PSF.py` permet d’explorer d’autres géométries. Le code modulaire est regroupé dans `src/psf_modeling/`, les figures sont stockées dans `figures/` et les tests unitaires dans `tests/`.
+Les scripts `PSF_JWST.py` et `PSF_HST.py` génèrent respectivement des pupilles simplifiées JWST et HST, calculent les PSF et produisent les figures principales. Le script `view_PSF.py` recharge une pupille sauvegardée et affiche la PSF correspondante, tandis que `others_PSF.py` permet d’explorer d’autres géométries. Le code modulaire est regroupé dans `src/psf_modeling/`, les figures sont stockées dans `figures/` et les tests unitaires dans `tests/`.
 
 ## Limites actuelles
 
