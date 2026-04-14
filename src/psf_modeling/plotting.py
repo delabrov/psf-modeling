@@ -17,6 +17,9 @@ def plot_pupil_and_psf(
     pupil_title: str = "Pupil",
     psf_title: str = "PSF",
     psf_cmap: str = "gray",
+    psf_floor_power: float = -8.0,
+    psf_upper_percentile: float = 99.9,
+    psf_dynamic_range: float = 3.0,
     figure_title: str | None = None,
     output_path: str | Path | None = None,
     show: bool = True,
@@ -32,7 +35,19 @@ def plot_pupil_and_psf(
     axs[0].set_title(pupil_title)
     axs[0].set_aspect("equal", "box")
 
-    axs[1].pcolormesh(coords, coords, log10_psf(psf), cmap=psf_cmap, shading="auto")
+    log_psf = log10_psf(psf, floor_power=psf_floor_power)
+    vmax = float(np.percentile(log_psf, psf_upper_percentile))
+    vmin = max(vmax - psf_dynamic_range, psf_floor_power)
+
+    axs[1].pcolormesh(
+        coords,
+        coords,
+        log_psf,
+        cmap=psf_cmap,
+        shading="auto",
+        vmin=vmin,
+        vmax=vmax,
+    )
     axs[1].set_title(psf_title)
     axs[1].set_aspect("equal", "box")
 

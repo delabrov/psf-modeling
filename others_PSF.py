@@ -49,6 +49,24 @@ def parse_args() -> argparse.Namespace:
         default=ROOT / "figures" / "other_pupil_psf.png",
         help="Output path for the generated figure.",
     )
+    parser.add_argument(
+        "--psf-floor-power",
+        type=float,
+        default=-8.0,
+        help="Lower display floor in log10 for PSF visualization.",
+    )
+    parser.add_argument(
+        "--psf-upper-percentile",
+        type=float,
+        default=99.9,
+        help="Upper percentile used to set PSF display vmax.",
+    )
+    parser.add_argument(
+        "--psf-dynamic-range",
+        type=float,
+        default=3.0,
+        help="Displayed PSF dynamic range in dex below vmax.",
+    )
     parser.add_argument("--no-show", action="store_true", help="Do not open a display window.")
     return parser.parse_args()
 
@@ -94,7 +112,10 @@ def main() -> None:
         coords=x,
         pupil_title=pupil_title,
         psf_title=psf_title,
-        psf_cmap="turbo",
+        psf_cmap="gray",
+        psf_floor_power=args.psf_floor_power,
+        psf_upper_percentile=args.psf_upper_percentile,
+        psf_dynamic_range=args.psf_dynamic_range,
         output_path=args.figure_path,
         show=not args.no_show,
     )
