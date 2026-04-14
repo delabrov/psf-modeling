@@ -34,10 +34,6 @@ Le projet inclut aussi une scène stellaire synthétique, puis sa convolution pa
 
 ![Initial field vs JWST-convolved field](figures/observed_field_initial_vs_jwst.png)
 
-La figure `figures/observed_field_jwst_only.png` montre l’image convoluée seule. On voit que la PSF redistribue le flux autour des sources ponctuelles et introduit la structure directionnelle liée à la géométrie de la pupille.
-
-![JWST convolved field](figures/observed_field_jwst_only.png)
-
 La figure `figures/observed_field_jwst_star_zoom.png` est un zoom unique centré sur l’étoile de coordonnées `(x=421, y=436)`. Ce zoom met en évidence les aigrettes de diffraction et permet une lecture locale plus claire de la réponse instrumentale.
 
 ![JWST single-star zoom](figures/observed_field_jwst_star_zoom.png)
